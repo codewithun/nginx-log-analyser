@@ -67,12 +67,14 @@ print_header "TOP 5 RESPONSE STATUS CODES"
 
 awk -F'"' 'NF >= 3 {
     split($3, response, " ")
-    if (response[2] ~ /^[0-9][0-9][0-9]$/) print response[2]
+    for (i = 1; i <= length(response); i++) {
+        if (response[i] ~ /^[0-9][0-9][0-9]$/) {
+            print response[i]
+            break
+        }
+    }
 }' "$LOG_FILE" |
-    sort |
-    uniq -c |
-    sort -rn |
-    head -n 5 |
+    sort | uniq -c | sort -rn | head -n 5 |
     awk '{printf "%-10s - %s requests\n", $2, $1}'
 
 # 4. Top 5 user agents
